@@ -13,7 +13,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
  * Firebase [com.google.android.gms.tasks.OnCompleteListener] interface.
  *
  */
-suspend fun <T> awaitTask(task: Task<T>): T = suspendCoroutine { continuation ->
+private suspend fun <T> awaitTask(task: Task<T>): T = suspendCoroutine { continuation ->
     task.addOnCompleteListener { task ->
         if (task.isSuccessful) {
             continuation.resume(task.result)
