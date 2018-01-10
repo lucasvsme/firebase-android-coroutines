@@ -23,7 +23,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
-suspend fun <T : Any> readReference(
+private suspend fun <T : Any> readReference(
         reference: DatabaseReference,
         type: Class<T>
 ): T = suspendCancellableCoroutine { continuation ->
@@ -125,7 +125,7 @@ suspend inline fun <reified T : Any> DatabaseReference.readValue(): T = readValu
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
-suspend fun <T : Any> readReferences(
+private suspend fun <T : Any> readReferences(
         reference: DatabaseReference,
         type: Class<T>
 ): Collection<T> = suspendCancellableCoroutine { continuation ->
