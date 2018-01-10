@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "kotlinx.coroutines.firebase.app"
+        applicationId "kotlinx.coroutines.experimental.firebase.app"
         minSdkVersion 25
         targetSdkVersion 27
         versionCode 1

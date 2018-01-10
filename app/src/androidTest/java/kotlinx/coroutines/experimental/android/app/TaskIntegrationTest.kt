@@ -1,4 +1,4 @@
-package firebase.coroutines.kotlinx.app
+package kotlinx.coroutines.experimental.android.app
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.firebase.auth.*
