@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.suspendCancellableCoroutine
  *
  * This method is not intended to be used in the code. It's just a base function that contains the
  * main coroutine code that reads a single value from Firebase Database. To use it's functionality
- * call [readValue] function.
+ * call [kotlinx.coroutines.experimental.firebase.android.readValue] function.
  *
  * The implementation consists of a [suspendCancellableCoroutine] that encapsulates a
  * [ValueEventListener].
@@ -84,7 +84,6 @@ private suspend fun <T : Any> readReference(
  * println(message) // Hello World
  * ```
  *
- * @param reference The Firebase Database node to be read.
  * @param type Expected type wrapped in a Class instance.
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
@@ -102,8 +101,6 @@ suspend fun <T : Any> DatabaseReference.readValue(type: Class<T>): T = readRefer
  * println(message) // Hello World
  * ```
  *
- * @param reference The Firebase Database node to be read.
- * @param type Expected type wrapped in a Class instance.
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
@@ -114,7 +111,7 @@ suspend inline fun <reified T : Any> DatabaseReference.readValue(): T = readValu
  *
  * This method is not intended to be used in the code. It's just a base function that contains the
  * main coroutine code that reads a collection of values from Firebase Database. To use it's
- * functionality call [readValue] function.
+ * functionality call [kotlinx.coroutines.experimental.firebase.android.readValue] function.
  *
  * The implementation consists of a [suspendCancellableCoroutine] that encapsulates a
  * [ValueEventListener].
@@ -178,44 +175,41 @@ private suspend fun <T : Any> readReferences(
  * Coroutine to read a list of values from Firebase Database
  *
  * This method returns an implementation of [List] interface with the generic type informed. It's
- * different from [readValue] function because of the way that Firebase serialize and deserialize
- * values.
+ * different from [kotlinx.coroutines.experimental.firebase.android.readValue] function because of
+ * the way that Firebase serialize and deserialize values.
  *
  * Example:
  * ```kotlin
  * val names = FirebaseDatabase.getInstance()
  *     .getReference("names")
- *     .readValues(String::class.java)
+ *     .readList(String::class.java)
  *
  * names.forEach(::println) // ["Adam", "Monica"]
  * ```
  *
- * @param reference The Firebase Database node to be read.
  * @param type Expected type wrapped in a Class instance.
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
-suspend fun <T : Any> DatabaseReference.readValues(type: Class<T>): List<T> = readReferences(this, type)
+suspend fun <T : Any> DatabaseReference.readList(type: Class<T>): List<T> = readReferences(this, type)
 
 /**
  * Coroutine to read a list of values from Firebase Database
  *
  * This method returns an implementation of [List] interface with the generic type informed. It's
- * different from [readValue] function because of the way that Firebase serialize and deserialize
- * values.
+ * different from [kotlinx.coroutines.experimental.firebase.android.readValue] function because of
+ * the way that Firebase serialize and deserialize values.
  *
  * Example:
  * ```kotlin
  * val names = FirebaseDatabase.getInstance()
  *     .getReference("names")
- *     .readValues<String>()
+ *     .readList<String>()
  *
  * names.forEach(::println) // ["Adam", "Monica"]
  * ```
  *
- * @param reference The Firebase Database node to be read.
- * @param type Expected type wrapped in a Class instance.
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
-suspend inline fun <reified T : Any> DatabaseReference.readValues(): List<T> = readValues(T::class.java)
+suspend inline fun <reified T : Any> DatabaseReference.readList(): List<T> = readList(T::class.java)

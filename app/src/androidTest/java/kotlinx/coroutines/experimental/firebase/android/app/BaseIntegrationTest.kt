@@ -1,4 +1,4 @@
-package kotlinx.coroutines.experimental.android.app
+package kotlinx.coroutines.experimental.firebase.android.app
 
 import android.support.test.InstrumentationRegistry
 import com.google.firebase.FirebaseApp

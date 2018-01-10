@@ -1,11 +1,11 @@
-package kotlinx.coroutines.experimental.android.app
+package kotlinx.coroutines.experimental.firebase.android.app
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.experimental.firebase.android.await
+import kotlinx.coroutines.experimental.firebase.android.readList
 import kotlinx.coroutines.experimental.firebase.android.readValue
-import kotlinx.coroutines.experimental.firebase.android.readValues
 import kotlinx.coroutines.experimental.runBlocking
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
@@ -52,7 +52,7 @@ class DatabaseReferenceIntegrationTest : BaseIntegrationTest() {
                     .map { carsNode.push().setValue(it) }
                     .map { it.await() }
 
-            val carsRetrieved = carsNode.readValues<Car>()
+            val carsRetrieved = carsNode.readList<Car>()
 
             assertThat(carsRetrieved.size, `is`(equalTo(3)))
             assertThat(carsRetrieved, hasItem(leyland))
