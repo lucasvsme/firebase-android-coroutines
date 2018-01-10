@@ -128,7 +128,7 @@ suspend inline fun <reified T : Any> DatabaseReference.readValue(): T = readValu
 private suspend fun <T : Any> readReferences(
         reference: DatabaseReference,
         type: Class<T>
-): Collection<T> = suspendCancellableCoroutine { continuation ->
+): List<T> = suspendCancellableCoroutine { continuation ->
     val listener = object : ValueEventListener {
 
         /**
@@ -196,7 +196,7 @@ private suspend fun <T : Any> readReferences(
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
-suspend fun <T : Any> DatabaseReference.readValues(type: Class<T>): Collection<T> = readReferences(this, type)
+suspend fun <T : Any> DatabaseReference.readValues(type: Class<T>): List<T> = readReferences(this, type)
 
 /**
  * Coroutine to read a list of values from Firebase Database
@@ -219,4 +219,4 @@ suspend fun <T : Any> DatabaseReference.readValues(type: Class<T>): Collection<T
  * @param T The type of the expected value from Firebase Database.
  * @return The persisted object of the type T informed.
  */
-suspend inline fun <reified T : Any> DatabaseReference.readValues(): Collection<T> = readValues(T::class.java)
+suspend inline fun <reified T : Any> DatabaseReference.readValues(): List<T> = readValues(T::class.java)
