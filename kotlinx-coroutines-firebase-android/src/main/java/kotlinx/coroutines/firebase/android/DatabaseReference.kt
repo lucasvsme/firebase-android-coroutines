@@ -1,16 +1,40 @@
 import com.google.firebase.FirebaseException
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
+ * Coroutine to read a single value from Firebase Database
  *
- * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/Query.html#addListenerForSingleValueEvent(com.google.firebase.database.ValueEventListener)
- * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/DataSnapshot
- * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/DatabaseError
+ * This method is not intended to be used in the code. It's just a base function that contains the
+ * main coroutine code that reads a single value from Firebase Database. To use it's functionality
+ * call [readValue] function.
+ *
+ * The implementation consists of a [suspendCoroutine] that encapsulates a [ValueEventListener].
+ *
+ * @param reference The Firebase Database node to be read.
+ * @param type Expected type wrapped in a Class instance.
+ * @param T The type of the expected value from Firebase Database.
+ * @return The persisted object of the type T informed.
  */
-suspend fun <T : Any> readReference(reference: DatabaseReference, type: Class<T>): T = suspendCoroutine { continuation ->
+suspend fun <T : Any> readReference(
+        reference: DatabaseReference,
+        type: Class<T>
+): T = suspendCoroutine { continuation ->
     reference.addListenerForSingleValueEvent(object : ValueEventListener {
 
+        /**
+         * Callback to handle Firebase Database errors
+         *
+         * It's triggered when there are authentication problems or network error. To see all
+         * possible, pleese refer to Firebase Database docs.
+         *
+         * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/DatabaseError
+         * @param error The error occurred.
+         * @throws FirebaseException When the error happens within Firebase SDK.
+         */
         override fun onCancelled(error: DatabaseError) {
             val exception = when (error.toException()) {
                 is FirebaseException -> error.toException()
@@ -20,6 +44,15 @@ suspend fun <T : Any> readReference(reference: DatabaseReference, type: Class<T>
             continuation.resumeWithException(exception)
         }
 
+        /**
+         * Callback to handle Firebase Database queries
+         *
+         * It's triggered when the requested value is available to access.
+         *
+         * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/DataSnapshot
+         * @param snapshot The data retrieved.
+         * @throws Exception The data retrieved could not be converted to the type informed.
+         */
         override fun onDataChange(snapshot: DataSnapshot) {
             try {
                 val data: T? = snapshot.getValue(type)
@@ -32,13 +65,73 @@ suspend fun <T : Any> readReference(reference: DatabaseReference, type: Class<T>
     })
 }
 
+/**
+ * Coroutine to read a single value from Firebase Database
+ *
+ * Example:
+ * ```kotlin
+ * val message = FirebaseDatabase.getInstance()
+ *     .getReference("message")
+ *     .readValue(String::class.java)
+ *
+ * println(message) // Hello World
+ * ```
+ *
+ * @param reference The Firebase Database node to be read.
+ * @param type Expected type wrapped in a Class instance.
+ * @param T The type of the expected value from Firebase Database.
+ * @return The persisted object of the type T informed.
+ */
 suspend fun <T : Any> DatabaseReference.readValue(type: Class<T>): T = readReference(this, type)
 
+/**
+ * Coroutine to read a single value from Firebase Database
+ *
+ * ```kotlin
+ * val message = FirebaseDatabase.getInstance()
+ *     .getReference("message")
+ *     .readValue(String::class.java)
+ *
+ * println(message) // Hello World
+ * ```
+ *
+ * @param reference The Firebase Database node to be read.
+ * @param type Expected type wrapped in a Class instance.
+ * @param T The type of the expected value from Firebase Database.
+ * @return The persisted object of the type T informed.
+ */
 suspend inline fun <reified T : Any> DatabaseReference.readValue(): T = readValue(T::class.java)
 
-suspend fun <T : Any> readReferences(reference: DatabaseReference, type: Class<T>): Collection<T> = suspendCoroutine { continuation ->
+/**
+ * Coroutine to read a collection of values from Firebase Database
+ *
+ * This method is not intended to be used in the code. It's just a base function that contains the
+ * main coroutine code that reads a collection of values from Firebase Database. To use it's
+ * functionality call [readValue] function.
+ *
+ * The implementation consists of a [suspendCoroutine] that encapsulates a [ValueEventListener].
+ *
+ * @param reference The Firebase Database node to be read.
+ * @param type Expected type wrapped in a Class instance.
+ * @param T The type of the expected value from Firebase Database.
+ * @return The persisted object of the type T informed.
+ */
+suspend fun <T : Any> readReferences(
+        reference: DatabaseReference,
+        type: Class<T>
+): Collection<T> = suspendCoroutine { continuation ->
     reference.addListenerForSingleValueEvent(object : ValueEventListener {
 
+        /**
+         * Callback to handle Firebase Database errors
+         *
+         * It's triggered when there are authentication problems or network error. To see all
+         * possible, pleese refer to Firebase Database docs.
+         *
+         * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/DatabaseError
+         * @param error The error occurred.
+         * @throws FirebaseException When the error happens within Firebase SDK.
+         */
         override fun onCancelled(error: DatabaseError) {
             val exception = when (error.toException()) {
                 is FirebaseException -> error.toException()
@@ -48,6 +141,15 @@ suspend fun <T : Any> readReferences(reference: DatabaseReference, type: Class<T
             continuation.resumeWithException(exception)
         }
 
+        /**
+         * Callback to handle Firebase Database queries
+         *
+         * It's triggered when the requested value is available to access.
+         *
+         * @link https://firebase.google.com/docs/reference/android/com/google/firebase/database/DataSnapshot
+         * @param snapshot The data retrieved.
+         * @throws Exception The data retrieved could not be converted to the type informed.
+         */
         override fun onDataChange(snapshot: DataSnapshot) {
             try {
                 val data: List<T> = snapshot.children.toHashSet().map { it.getValue(type)!! }
@@ -60,6 +162,48 @@ suspend fun <T : Any> readReferences(reference: DatabaseReference, type: Class<T
     })
 }
 
+/**
+ * Coroutine to read a list of values from Firebase Database
+ *
+ * This method returns an implementation of [List] interface with the generic type informed. It's
+ * different from [readValue] function because of the way that Firebase serialize and deserialize
+ * values.
+ *
+ * Example:
+ * ```kotlin
+ * val names = FirebaseDatabase.getInstance()
+ *     .getReference("names")
+ *     .readValues(String::class.java)
+ *
+ * names.forEach(::println) // ["Adam", "Monica"]
+ * ```
+ *
+ * @param reference The Firebase Database node to be read.
+ * @param type Expected type wrapped in a Class instance.
+ * @param T The type of the expected value from Firebase Database.
+ * @return The persisted object of the type T informed.
+ */
 suspend fun <T : Any> DatabaseReference.readValues(type: Class<T>): Collection<T> = readReferences(this, type)
 
+/**
+ * Coroutine to read a list of values from Firebase Database
+ *
+ * This method returns an implementation of [List] interface with the generic type informed. It's
+ * different from [readValue] function because of the way that Firebase serialize and deserialize
+ * values.
+ *
+ * Example:
+ * ```kotlin
+ * val names = FirebaseDatabase.getInstance()
+ *     .getReference("names")
+ *     .readValues<String>()
+ *
+ * names.forEach(::println) // ["Adam", "Monica"]
+ * ```
+ *
+ * @param reference The Firebase Database node to be read.
+ * @param type Expected type wrapped in a Class instance.
+ * @param T The type of the expected value from Firebase Database.
+ * @return The persisted object of the type T informed.
+ */
 suspend inline fun <reified T : Any> DatabaseReference.readValues(): Collection<T> = readValues(T::class.java)
