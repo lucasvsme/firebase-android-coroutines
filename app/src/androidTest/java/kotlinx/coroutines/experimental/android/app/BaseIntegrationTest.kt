@@ -5,8 +5,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.firebase.android.await
 import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.firebase.android.await
 import org.junit.Before
 import org.junit.BeforeClass
 

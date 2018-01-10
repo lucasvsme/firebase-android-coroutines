@@ -2,8 +2,8 @@ package kotlinx.coroutines.experimental.android.app
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.firebase.auth.*
+import kotlinx.coroutines.experimental.firebase.android.await
 import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.firebase.android.await
 import org.hamcrest.Matchers.*
 
 import org.junit.Test

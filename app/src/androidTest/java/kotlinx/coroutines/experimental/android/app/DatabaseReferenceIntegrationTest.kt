@@ -3,15 +3,15 @@ package kotlinx.coroutines.experimental.android.app
 import android.support.test.runner.AndroidJUnit4
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
+import kotlinx.coroutines.experimental.firebase.android.await
+import kotlinx.coroutines.experimental.firebase.android.readValue
+import kotlinx.coroutines.experimental.firebase.android.readValues
 import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.firebase.android.await
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
 import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
-import readValue
-import readValues
 
 @RunWith(AndroidJUnit4::class)
 class DatabaseReferenceIntegrationTest : BaseIntegrationTest() {

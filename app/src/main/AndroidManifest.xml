@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="kotlinx.coroutines.experimental.firebase.app">
+    package="kotlinx.coroutines.experimental.firebase.android.app">
 
     <application
         android:allowBackup="true"
