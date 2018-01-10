@@ -3,6 +3,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.experimental.cancel
+import kotlinx.coroutines.experimental.disposeOnCompletion
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
@@ -12,7 +15,8 @@ import kotlin.coroutines.experimental.suspendCoroutine
  * main coroutine code that reads a single value from Firebase Database. To use it's functionality
  * call [readValue] function.
  *
- * The implementation consists of a [suspendCoroutine] that encapsulates a [ValueEventListener].
+ * The implementation consists of a [suspendCancellableCoroutine] that encapsulates a
+ * [ValueEventListener].
  *
  * @param reference The Firebase Database node to be read.
  * @param type Expected type wrapped in a Class instance.
@@ -22,8 +26,8 @@ import kotlin.coroutines.experimental.suspendCoroutine
 suspend fun <T : Any> readReference(
         reference: DatabaseReference,
         type: Class<T>
-): T = suspendCoroutine { continuation ->
-    reference.addListenerForSingleValueEvent(object : ValueEventListener {
+): T = suspendCancellableCoroutine { continuation ->
+    val listener = object : ValueEventListener {
 
         /**
          * Callback to handle Firebase Database errors
@@ -62,7 +66,11 @@ suspend fun <T : Any> readReference(
                 continuation.resumeWithException(exception)
             }
         }
-    })
+    }
+
+    continuation.invokeOnCompletion { reference.removeEventListener(listener) }
+
+    reference.addListenerForSingleValueEvent(listener)
 }
 
 /**
@@ -109,7 +117,8 @@ suspend inline fun <reified T : Any> DatabaseReference.readValue(): T = readValu
  * main coroutine code that reads a collection of values from Firebase Database. To use it's
  * functionality call [readValue] function.
  *
- * The implementation consists of a [suspendCoroutine] that encapsulates a [ValueEventListener].
+ * The implementation consists of a [suspendCancellableCoroutine] that encapsulates a
+ * [ValueEventListener].
  *
  * @param reference The Firebase Database node to be read.
  * @param type Expected type wrapped in a Class instance.
@@ -119,8 +128,8 @@ suspend inline fun <reified T : Any> DatabaseReference.readValue(): T = readValu
 suspend fun <T : Any> readReferences(
         reference: DatabaseReference,
         type: Class<T>
-): Collection<T> = suspendCoroutine { continuation ->
-    reference.addListenerForSingleValueEvent(object : ValueEventListener {
+): Collection<T> = suspendCancellableCoroutine { continuation ->
+    val listener = object : ValueEventListener {
 
         /**
          * Callback to handle Firebase Database errors
@@ -159,7 +168,11 @@ suspend fun <T : Any> readReferences(
                 continuation.resumeWithException(exception)
             }
         }
-    })
+    }
+
+    continuation.invokeOnCompletion { reference.removeEventListener(listener) }
+
+    reference.addListenerForSingleValueEvent(listener)
 }
 
 /**
