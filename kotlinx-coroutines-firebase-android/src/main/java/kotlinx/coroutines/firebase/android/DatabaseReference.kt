@@ -90,7 +90,7 @@ suspend fun <T : Any> DatabaseReference.readValue(type: Class<T>): T = readRefer
  * ```kotlin
  * val message = FirebaseDatabase.getInstance()
  *     .getReference("message")
- *     .readValue(String::class.java)
+ *     .readValue<String>()
  *
  * println(message) // Hello World
  * ```
