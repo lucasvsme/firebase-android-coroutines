@@ -1,4 +1,4 @@
-package kotlinx.coroutines.firebase.android
+package kotlinx.coroutines.experimental.firebase.android
 
 import com.google.android.gms.tasks.Task
 import kotlin.coroutines.experimental.suspendCoroutine

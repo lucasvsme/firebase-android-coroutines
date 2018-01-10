@@ -1,12 +1,11 @@
+package kotlinx.coroutines.experimental.firebase.android
+
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.experimental.cancel
-import kotlinx.coroutines.experimental.disposeOnCompletion
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
-import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
  * Coroutine to read a single value from Firebase Database
