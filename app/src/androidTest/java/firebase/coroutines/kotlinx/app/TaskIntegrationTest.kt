@@ -1,27 +1,18 @@
 package firebase.coroutines.kotlinx.app
 
-import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.*
-import com.google.firebase.internal.FirebaseAppHelper
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.firebase.android.await
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
 
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
-import org.junit.Before
-import java.util.function.Predicate
+import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 @RunWith(AndroidJUnit4::class)
 class TaskIntegrationTest : BaseIntegrationTest() {
 
@@ -40,9 +31,6 @@ class TaskIntegrationTest : BaseIntegrationTest() {
         /* return */ Unit
     }
 
-    /**
-     * @link https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseUser#getIdToken(boolean)
-     */
     @Test
     fun testAwaitCanBeUsedToGetAnAccessToken() = runBlocking {
         val auth = FirebaseAuth.getInstance()

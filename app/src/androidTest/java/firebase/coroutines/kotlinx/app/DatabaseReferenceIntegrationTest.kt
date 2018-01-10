@@ -1,15 +1,13 @@
 package firebase.coroutines.kotlinx.app
 
-import android.os.Parcel
-import android.os.Parcelable
 import android.support.test.runner.AndroidJUnit4
-import android.util.Log
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.coroutines.firebase.android.await
 import org.hamcrest.Matchers.*
-import org.junit.Assert.*
+import org.junit.Assert.assertThat
+import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
 import readValue
