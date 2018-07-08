@@ -213,3 +213,8 @@ suspend fun <T : Any> DatabaseReference.readList(type: Class<T>): List<T> = read
  * @return The persisted object of the type T informed.
  */
 suspend inline fun <reified T : Any> DatabaseReference.readList(): List<T> = readList(T::class.java)
+
+suspend fun <T : Any> DatabaseReference.saveValue(value: T): Unit =
+        setValue(value).await().let { Unit }
+
+suspend fun <T: Any> DatabaseReference.pushValue(value: T): Unit = push().saveValue(value)

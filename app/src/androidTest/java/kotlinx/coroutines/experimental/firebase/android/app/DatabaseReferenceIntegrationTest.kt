@@ -3,9 +3,10 @@ package kotlinx.coroutines.experimental.firebase.android.app
 import android.support.test.runner.AndroidJUnit4
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
-import kotlinx.coroutines.experimental.firebase.android.await
+import kotlinx.coroutines.experimental.firebase.android.pushValue
 import kotlinx.coroutines.experimental.firebase.android.readList
 import kotlinx.coroutines.experimental.firebase.android.readValue
+import kotlinx.coroutines.experimental.firebase.android.saveValue
 import kotlinx.coroutines.experimental.runBlocking
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
@@ -24,8 +25,8 @@ class DatabaseReferenceIntegrationTest : BaseIntegrationTest() {
         val secondMessageNode = messagesNode.child("2")
 
         try {
-            firstMessageNode.setValue("Call Mary tomorrow morning").await()
-            secondMessageNode.setValue("See the new TV show season").await()
+            firstMessageNode.saveValue("Call Mary tomorrow morning")
+            secondMessageNode.saveValue("See the new TV show season")
 
             val first = firstMessageNode.readValue<String>()
             val second = secondMessageNode.readValue(String::class.java)
@@ -48,9 +49,9 @@ class DatabaseReferenceIntegrationTest : BaseIntegrationTest() {
         val fpace = Car("Jaguar F-Pace", 2017, 549999.0)
 
         try {
-            setOf(leyland, mustang, fpace)
-                    .map { carsNode.push().setValue(it) }
-                    .map { it.await() }
+            carsNode.pushValue(leyland)
+            carsNode.pushValue(mustang)
+            carsNode.pushValue(fpace)
 
             val carsRetrieved = carsNode.readList<Car>()
 
