@@ -23,14 +23,19 @@ class DatabaseReferenceIntegrationTest : BaseIntegrationTest() {
 
         val firstMessageNode = messagesNode.child("1")
         val secondMessageNode = messagesNode.child("2")
+        val thirdMessageNode = messagesNode.child("3")
 
         try {
             firstMessageNode.saveValue("Call Mary tomorrow morning")
             secondMessageNode.saveValue("See the new TV show season")
+            thirdMessageNode.saveValue("Spread Kotlin word")
 
             val first = firstMessageNode.readValue<String>()
             val second = secondMessageNode.readValue(String::class.java)
+            val third = messagesNode.orderByValue().limitToFirst(1).readList<String>()
 
+            assertThat(third.size, `is`(equalTo(1)))
+            assertThat(third[0], `is`(equalTo("Call Mary tomorrow morning")))
             assertThat(first, `is`(equalTo("Call Mary tomorrow morning")))
             assertThat(second, `is`(equalTo("See the new TV show season")))
         } catch (exception: FirebaseException) {
