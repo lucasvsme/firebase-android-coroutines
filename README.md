@@ -1,3 +1,8 @@
+> ## Deprecation notice
+> A better implementation has been merged into the official [kotlin/kotlinx.coroutines](https://github.com/kotlin/kotlinx.coroutines) repository.
+> 
+> Please, use the [official implementation](https://github.com/Kotlin/kotlinx.coroutines/tree/master/integration/kotlinx-coroutines-play-services) instead.
+
 # Module kotlinx-coroutines-firebase
 
 Integration with Firebase [Task](https://developers.google.com/android/reference/com/google/android/gms/tasks/Task) and [DatabaseReference](https://firebase.google.com/docs/reference/android/com/google/firebase/database/DatabaseReference) for Android.
